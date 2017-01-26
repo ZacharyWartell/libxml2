@@ -39,6 +39,7 @@ REM popd
 REM exit /b
 
 REM Remarks:
+REM I gave up compiling against a libiconv.dll (see below).  And instead only generate a static compiled libiconv and link libxml with that.
 REM
 REM Note, libxml nmake by default uses /Z7 for debugging.  Will this cause problems if code the links to 
 REM the generated library used /Zi or /Zl?
