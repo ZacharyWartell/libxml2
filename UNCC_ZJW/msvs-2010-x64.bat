@@ -1,6 +1,6 @@
 REM \author Zachary Wartell <zwartell@uncc.edu>
 REM 
-REM Run this script from libxml2\UNCC_ZJW-build
+REM Run this script from libxml2\UNCC_ZJW
 REM
 REM This script is an attempt to automate the instructions in libxml2\win32\Readme.txt
 REM The compiler settings and directory paths are based my needs for compiling the suite
@@ -20,6 +20,10 @@ set MSVS_ARCH=amd64
 REM these choices all generate xmllint.exe and other executables that crashed immediately
 REM set MSVS_ARCH=amd64
 REM set MSVS_ARCH=x86_amd64
+
+pushd GumNTape_Build
+set GUMNTAPE_BUILD=%CD%
+popd
 
 pushd ..\win32
 
@@ -63,12 +67,10 @@ cscript configure.js compiler=msvc cruntime=/MDd debug=yes bindir=%INSTALL_BIN_D
 REM \todo generalize this line 
 REM other architectures?
 
-pushd "%VS100COMNTOOLS%\..\..\VC"
-REM dir
-REM popd
-REM goto exit_popd
-call vcvarsall.bat %MSVS_ARCH% 
-popd
+echo on
+call %GUMNTAPE_BUILD%\common\msvs_tools_setup.bat 64 2010
+
+goto exit_popd
 
 echo Make Clean
 nmake /f Makefile.msvc clean 
