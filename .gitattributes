@@ -46,6 +46,7 @@ Readme    text eol=lf
 *.xml    text eol=lf
 
 *.dsw    text eol=crlf
+*.bat    text eol=crlf
 *.dsp    text eol=crlf
 *.sln    text eol=crlf
 *.vcproj    text eol=crlf
