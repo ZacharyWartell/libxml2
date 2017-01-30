@@ -1,4 +1,4 @@
-echo off
+@echo off
 REM \author Zachary Wartell <zwartell@uncc.edu>
 REM 
 REM Run this script from libxml2\UNCC_ZJW
@@ -19,7 +19,7 @@ if "%1"=="/?" (
 	echo. 
 	echo USAGE:
 	echo. 
-	echo msvs_compile.bat MSVS_BITS MSVS_VERSION
+	echo msvs-compile.bat MSVS_BITS MSVS_VERSION
 	echo. 
 	echo MSVS_BITS = 32 or 64 
 	echo      determines whether compilation result is for 32 or 64 architecture
@@ -30,6 +30,9 @@ if "%1"=="/?" (
 	exit /b
 )
 
+set MSVS_BITS=%1
+set MSVS_VERSION=%2
+
 REM \todo how to make this more flexible, will this generate code the fails on intel64 machines?
 
 pushd GumNTape_Build
@@ -37,12 +40,12 @@ set GUMNTAPE_BUILD=%CD%
 popd
 
 REM setup MSVS compiler tools
-call %GUMNTAPE_BUILD%\common\msvs_tools_setup.bat 64 2010
+call %GUMNTAPE_BUILD%\common\msvs_tools_setup.bat %MSVS_BITS% %MSVS_VERSION% 
 
 pushd ..\win32
 
 set TPL_DIR=..\..
-call "%GUMNTAPE_BUILD%\common\v1\msvs_set_install_paths.bat" %TPL_DIR% 64 2010
+call "%GUMNTAPE_BUILD%\common\v1\msvs_set_install_paths.bat" %TPL_DIR% %MSVS_BITS% %MSVS_VERSION%
 
 REM set DEBUG1=1
 if DEFINED DEBUG1 (
