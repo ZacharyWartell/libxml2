@@ -61,7 +61,7 @@ REM popd
 REM exit /b
 
 REM Remarks:
-REM I gave up compiling against a libiconv.dll (see below).  And instead only generate a static compiled libiconv and link libxml with that.
+REM I gave up compiling libxml2 against a libiconv.dll (see below).  And instead only generate a static compiled libiconv and link libxml with that.
 REM
 REM Note, libxml nmake by default uses /Z7 for debugging.  Will this cause problems if code the links to 
 REM the generated library used /Zi or /Zl?
@@ -82,9 +82,9 @@ REM /MD  - generates xmllint.exe that crashes
 REM /MTd - ditto
 REM
 
-cscript configure.js compiler=msvc cruntime=/MDd debug=yes bindir=%INSTALL_BIN_DIR% libdir=%INSTALL_LIB_DIR% incdir=%INSTALL_INC_DIR% include="%INSTALL_INC_DIR%\iconv" lib=%INSTALL_LIB_DIR% sodir=%INSTALL_BIN_DIR%
+REM Compile Debug Version 
 
-REM goto exit_popd
+cscript configure.js compiler=msvc cruntime=/MDd debug=yes bindir=%INSTALL_BIN_DIR% libdir=%INSTALL_LIB_DIR% incdir=%INSTALL_INC_DIR% include="%INSTALL_INC_DIR%\iconv" lib=%INSTALL_LIB_DIR% sodir=%INSTALL_BIN_DIR%
 
 echo Make Clean
 nmake /f Makefile.msvc clean 
@@ -93,6 +93,29 @@ nmake /f Makefile.msvc
 echo Make Install
 nmake /f Makefile.msvc install
 
+REM rename using CMake style naming convention for debug version
+pushd %INSTALL_LIB_DIR%
+rename libxml2.lib libxml2d.lib
+rename libxml2_a.lib libxml2_ad.lib
+rename libxml2_a_dll.lib libxml2_ad_dll.lib
+popd
+
+pushd %INSTALL_BIN_DIR%
+rename libxml2.dll libxml2d.dll
+rename libxml2.pdb libxml2d.pdb
+popd
+
+REM Compile Release Version 
+REM (Note, I'll let the Release version of the .exe files overwright the Debug versions compiled above)
+
+cscript configure.js compiler=msvc cruntime=/MD debug=no bindir=%INSTALL_BIN_DIR% libdir=%INSTALL_LIB_DIR% incdir=%INSTALL_INC_DIR% include="%INSTALL_INC_DIR%\iconv" lib=%INSTALL_LIB_DIR% sodir=%INSTALL_BIN_DIR%
+
+echo Make Clean
+nmake /f Makefile.msvc clean 
+echo Make 
+nmake /f Makefile.msvc
+echo Make Install
+nmake /f Makefile.msvc install
 :exit_popd
 
 popd
